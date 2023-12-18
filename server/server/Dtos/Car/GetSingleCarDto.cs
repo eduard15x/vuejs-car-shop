@@ -5,7 +5,7 @@ namespace server.Dtos.Car
     public class GetSingleCarDto
     {
         [Required]
-        public int CarId { get; set; }
+        public int Id { get; set; }
         [Required]
         public string CarName { get; set; }
         [Required]

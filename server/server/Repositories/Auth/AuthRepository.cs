@@ -23,6 +23,8 @@ namespace server.Repositories.Auth
             // Hash and Salt password
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(newUser.Password);
 
+            newUser.Password = hashedPassword;
+
             _appDbContext.Users.Add(newUser);
             await _appDbContext.SaveChangesAsync();
 

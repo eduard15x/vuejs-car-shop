@@ -20,16 +20,32 @@ namespace server.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(JsonResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(JsonResult), (int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult> GetAllCars(int page, int pageSize, string search = "")
+        public async Task<ActionResult> GetAllCars()
         {
             try
             {
-                var response = await _carService.GetAllCars(page, pageSize, search);
+                var response = await _carService.GetAllCars();
                 return Json(Ok(response));
             }
             catch (Exception ex)
             {
                 return Json(BadRequest(ex));
+            }
+        }
+
+        [HttpGet("user/{userId}")]
+        [ProducesResponseType(typeof(JsonResult), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(JsonResult), (int)HttpStatusCode.Conflict)]
+        public async Task<ActionResult> GetAllCarsForUser(int userId, int page, int pageSize, string search = "")
+        {
+            try
+            {
+                var response = await _carService.GetAllCarsForUser(userId, page, pageSize, search);
+                return Json(Ok(response));
+            }
+            catch (Exception ex)
+            {
+                return Json(Conflict(ex.Message));
             }
         }
 
@@ -88,11 +104,11 @@ namespace server.Controllers
         [HttpDelete("delete/{carId}")]
         [ProducesResponseType(typeof(JsonResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(JsonResult), (int)HttpStatusCode.Conflict)]
-        public async Task<ActionResult> RemoveCar(int carID)
+        public async Task<ActionResult> RemoveCar(int carId)
         {
             try
             {
-                var response = await _carService.RemoveCar(carID);
+                var response = await _carService.RemoveCar(carId);
                 return Json(Ok(response));
             }
             catch (Exception ex)

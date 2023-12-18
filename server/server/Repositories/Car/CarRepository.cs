@@ -12,35 +12,27 @@ namespace server.Repositories.Car
             _appDbContext = appDbContext;
         }
 
-
-        public async Task<List<Models.Car>> GetAllCars(int page, int pageSize, string search)
+        public async Task<List<Models.Car>> GetAllCars()
         {
-            var query = await _appDbContext.Cars.ToListAsync();
+            return await _appDbContext.Cars.ToListAsync();
+        }
 
-            //if (!string.IsNullOrEmpty(search))
-            //{
-            //    query = query.Where(s => s.CarName.Contains(search)).ToListAsync();
-            //}
+        public async Task<List<Models.Car>> GetAllCarsForUser(int userId, int page, int pageSize, string search)
+        {
+            var query = _appDbContext.Cars
+                .Where(s => s.UserId == userId);
 
-            //if (!string.IsNullOrEmpty(selectedCities))
-            //{
-            //    var cities = selectedCities.Split(',').Select(city => city.Trim());
-            //    query = query.Where(s => cities.Contains(s.SalonCity));
-            //}
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(s => s.CarName.Contains(search));
+            }
 
-            //var totalItemCount = await query.CountAsync();
+            var carListDb = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
 
-            //var salonsListDb = await query
-            //    .Skip((page - 1) * pageSize)
-            //    .Take(pageSize)
-            //    .ToListAsync();
-
-            //return new GetSalonListDto
-            //{
-            //    Salons = salonsListDb,
-            //    TotalSalons = totalItemCount
-            //};
-            return query;
+            return carListDb;
         }
 
         public async Task<Models.Car> GetSingleCar(int carId)
@@ -76,25 +68,19 @@ namespace server.Repositories.Car
             return existingCar;
         }
 
-        public async Task<bool> RemoveCar(int carID)
+        public async Task<string> RemoveCar(int carId)
         {
-            var book = await _appDbContext.Cars.FirstOrDefaultAsync(c => c.Id == carID);
+            var car = await _appDbContext.Cars.FirstOrDefaultAsync(c => c.Id == carId);
 
-            if (book is null)
+            if (car is null)
             {
-                throw new Exception($"Book with Id '{book.Id}' was not found.");
+                return $"Car with Id '{car.Id}' was not found.";
             }
 
-            try
-            {
-                _appDbContext.Cars.Remove(book);
-                await _appDbContext.SaveChangesAsync();
+            _appDbContext.Cars.Remove(car);
+            await _appDbContext.SaveChangesAsync();
 
-                return true;
-            } catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            return "Car deleted successfully.";
         }
 
     }

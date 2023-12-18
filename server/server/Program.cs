@@ -1,7 +1,15 @@
+using server.Data;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using server.Data;
+using server.Repositories.Auth;
+using server.Repositories.Car;
+using server.Services.Auth;
+using server.Services.Car;
+using server.Services.Token;
 using System.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -32,7 +40,44 @@ builder.Services.AddCors(options =>
 );
 
 builder.Services.AddScoped<IDbConnection>(x => new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<ICarService, CarService>();
+builder.Services.AddScoped<ICarRepository, CarRepository>();
 
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddCookie(option =>
+{
+    option.Cookie.Name = "token";
+    option.ExpireTimeSpan = TimeSpan.FromMinutes(30); // Set your desired session duration
+    option.SlidingExpiration = false; // Extend the session cookie expiration with activity
+
+
+}).AddJwtBearer(option =>
+{
+    option.RequireHttpsMetadata = false;
+    option.SaveToken = true;
+    option.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["AppSettings:Secret"]!)),
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+
+    option.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            context.Token = context.Request.Cookies["token"];
+            return Task.CompletedTask;
+        }
+    };
+});
 
 builder.Services.AddHttpContextAccessor();
 

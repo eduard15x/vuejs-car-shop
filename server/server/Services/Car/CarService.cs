@@ -1,19 +1,22 @@
 ﻿
+using AutoMapper;
 using server.Dtos.Car;
-using server.Models;
+using server.Repositories.Car;
 using System.Security.Claims;
 
 namespace server.Services.Car
 {
     public class CarService : ICarService
     {
+        private readonly IMapper _mapper;
         private readonly ICarRepository _carRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private int GetUserId() => int.Parse(_httpContextAccessor.HttpContext!.User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
 
-        public CarService(ICarRepository carRepository, IHttpContextAccessor httpContextAccessor)
+        public CarService(IMapper mapper, ICarRepository carRepository, IHttpContextAccessor httpContextAccessor)
         {
+            _mapper = mapper;
             _carRepository = carRepository;
             _httpContextAccessor = httpContextAccessor;
         }
@@ -24,8 +27,9 @@ namespace server.Services.Car
                 return new List<GetSingleCarDto>();
             }
 
+            var bookList = await _carRepository.GetAllCars(page, pageSize, search);
 
-            return await _carRepository.GetAllCars(page, pageSize, search);
+            return _mapper.Map<List<GetSingleCarDto>>(bookList);
         }
 
         public async Task<GetSingleCarDto> GetSingleCar(int carId)
@@ -35,7 +39,9 @@ namespace server.Services.Car
                 throw new Exception("Car not found");
             }
 
-            return await _carRepository.GetSingleCar(carId);
+            var carEntity = await _carRepository.GetSingleCar(carId);
+
+            return _mapper.Map<GetSingleCarDto>(carEntity);
         }
 
         public async Task<GetSingleCarDto> AddNewCar(AddNewCarDto newCarDetails)
@@ -52,7 +58,10 @@ namespace server.Services.Car
                 throw new Exception("Car not updated successfully.");
             }
 
-            return await _carRepository.AddNewCar(newCarDetails);
+            var carEntity = _mapper.Map<Models.Car>(newCarDetails);
+            var newAddedCar = await _carRepository.AddNewCar(carEntity);
+
+            return _mapper.Map<GetSingleCarDto>(newAddedCar);
         }
 
         public async Task<GetSingleCarDto> UpdateCar(int carId, UpdateCarDto updateCarDto)
@@ -74,7 +83,10 @@ namespace server.Services.Car
             //    throw new Exception("Not authorized!");
             //}
 
-            return await _carRepository.UpdateCar(updateCarDto);
+            var carEntity = _mapper.Map<Models.Car>(updateCarDto);
+            var updatedCarEntity = await _carRepository.UpdateCar(carId, carEntity);
+
+            return _mapper.Map<GetSingleCarDto>(updatedCarEntity);
         }
 
         public async Task<string> RemoveCar(int carId)
@@ -91,7 +103,14 @@ namespace server.Services.Car
                 throw new Exception("Car not found");
             }
 
-            return await _carRepository.RemoveCar(carId);
+            bool carRemoved = await _carRepository.RemoveCar(carId);
+
+            if (!carRemoved)
+            {
+                return "Car couldn't be removed. Please try again.";
+            }
+
+            return "Car was removed succesfully";
         }
     }
 }

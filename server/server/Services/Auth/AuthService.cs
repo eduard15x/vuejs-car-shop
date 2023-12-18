@@ -1,4 +1,5 @@
-﻿using server.Dtos.User;
+﻿using AutoMapper;
+using server.Dtos.User;
 using server.Models;
 using server.Repositories.Auth;
 using server.Services.Token;
@@ -7,12 +8,14 @@ namespace server.Services.Auth
 {
     public class AuthService : IAuthService
     {
+        private readonly IMapper _mapper;
         private readonly IAuthRepository _authRepository;
         private readonly ITokenService _tokenService;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AuthService(IAuthRepository authRepository, ITokenService tokenService, IHttpContextAccessor httpContextAccessor)
+        public AuthService(IMapper mapper, IAuthRepository authRepository, ITokenService tokenService, IHttpContextAccessor httpContextAccessor)
         {
+            _mapper = mapper;
             _authRepository = authRepository;
             _tokenService = tokenService;
             _httpContextAccessor = httpContextAccessor;
@@ -35,7 +38,9 @@ namespace server.Services.Auth
                 PhoneNumber = registerUserDto.PhoneNumber,
             };
 
-            return await _authRepository.Register(newUser);
+            var newUserEntity = await _authRepository.Register(newUser);
+
+            return _tokenService.GenerateToken(newUserEntity);
         }
 
         public async Task<UserTokenDto> Login(LoginUserDto userCredentials)

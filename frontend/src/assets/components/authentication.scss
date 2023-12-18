@@ -32,11 +32,14 @@
             &--close-btn {
                 cursor: pointer;
                 position: absolute;
-                top: 0;
-                right: 0;
-                width: 30px;
-                height: 30px;
-                background-color: red;
+                top: 8px;
+                right: 12px;
+                z-index: 50;
+                font-size: 24px;
+
+                &:hover {
+                    transform: scale(1.1);
+                }
             }
 
             &--tabs {
@@ -76,8 +79,6 @@
                 }
 
             }
-
         }
-
     }
 }

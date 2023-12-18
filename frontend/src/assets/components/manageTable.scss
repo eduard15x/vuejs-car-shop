@@ -1,0 +1,152 @@
+.manage-table {
+    width: 100%;
+    padding: 20px;
+    max-width: 1440px;
+    margin: 0 auto;
+
+    .table-functions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+
+        .search-container {
+            &__input {
+                font-size: 16px;
+                width: 250px;
+                margin-right: 10px;
+                padding: 6px;
+                border: 1px solid rgb(175, 175, 175);
+                border-radius: 4px;
+            }
+
+            &__btn {
+                font-size: 16px;
+                padding: 6px 24px;
+                border: none;
+                border-radius: 4px;
+                background-color: rgb(0, 110, 255);
+                color: white;
+                cursor: pointer;
+
+                &:hover {
+                    filter: brightness(1.2);
+                }
+            }
+        }
+
+        .add-new-btn {
+            font-size: 16px;
+            padding: 6px 24px;
+            border: none;
+            border-radius: 4px;
+            background-color: rgb(0, 110, 255);
+            color: white;
+            cursor: pointer;
+
+            &:hover {
+                filter: brightness(1.2);
+            }
+        }
+    }
+
+    &__title {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    &__table {
+        width: 100%;
+        border: 1px solid rgb(160, 160, 160);
+        border-top-width: 0px;
+        border-collapse: collapse;
+        color: rgb(70, 70, 70);
+
+        &--head {
+            background-color: rgb(237, 237, 237);
+
+            tr {
+                th {
+                    font-size: 18px;
+                    padding: 10px;
+
+                    &:nth-child(2) {
+                        text-align: center;
+                        width: 100px;
+                    }
+                }
+            }
+        }
+
+        &--body {
+            tr {
+                td {
+                    padding: 12px 8px;
+                    line-height: 150%;
+                    font-size: 18px;
+
+                    &:first-child {
+                        text-align: center;
+                    }
+
+                    &:nth-child(2) {
+                        text-align: center;
+                        width: 100px;
+                    }
+                }
+
+                &:hover {
+                    cursor: pointer;
+                    background-color: rgb(220, 220, 220);
+                    transition: all 0.3s linear;
+                }
+
+                .manage-item {
+                    cursor: pointer;
+                    font-size: 16px;
+                    padding: 8px;
+                    border: 1px solid rgb(160, 160, 160);
+
+                }
+            }
+        }
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px 0;
+
+        &__info {
+            p {
+                font-weight: bold;
+                color: rgb(70, 70, 70);
+                margin-right: 12px;
+            }
+        }
+
+        &__controls {
+            margin-left: 12px;
+
+            button {
+                border: none;
+                font-size: 16px;
+
+                padding: 4px 16px;
+                border-radius: 4px;
+                background-color: rgb(220, 220, 220);
+                color: black;
+                cursor: pointer;
+
+            &:hover {
+                filter: brightness(0.9);
+            }
+                
+                &:last-child {
+                    margin-left: 8px;
+                }
+            }
+        }
+    }
+}

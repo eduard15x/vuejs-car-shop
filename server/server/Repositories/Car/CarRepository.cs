@@ -81,7 +81,7 @@ namespace server.Repositories.Car
 
             if (car is null)
             {
-                return $"Car with Id '{car.Id}' was not found.";
+                throw new Exception($"Car with Id '{carId}' was not found.");
             }
 
             _appDbContext.Cars.Remove(car);

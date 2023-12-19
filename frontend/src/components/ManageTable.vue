@@ -32,10 +32,7 @@
                 </tr>
             </thead>
 
-            <tbody
-                v-if="carList.length !== 0"
-                class="manage-table__table--body"
-            >
+            <tbody v-if="carList.length !== 0" class="manage-table__table--body">
                 <tr v-for="(car, index) in carList" :key="index">
                     <td>{{ index + 1 + itemNumberInTable }}</td>
                     <td>{{ car.id }}</td>
@@ -45,7 +42,7 @@
                     <td>{{ car.carYear }}</td>
                     <td>${{ car.carPrice }}</td>
                     <td>
-                        <select class="manage-item" v-model="selectedOption" @change="toggleManageModal">
+                        <select class="manage-item" :data-car-id="car.id" v-model="selectedOption" @change="toggleManageModal">
                             <option value="" disabled>Select option</option>
                             <option value="update">Update</option>
                             <option value="delete">Delete</option>
@@ -54,10 +51,7 @@
                 </tr>
             </tbody>
 
-            <tbody
-                v-else
-                class="empty-table"
-            >
+            <tbody v-else class="empty-table">
                 <tr>
                     <td></td>
                     <td></td>
@@ -79,22 +73,27 @@
         />
     </div>
 
-    <manage-modal :manageModalTitle="manageModalTitle" />
+    <manage-modal
+        :manageModalTitle="manageModalTitle"
+        :fetchItems="fetchItems"
+        :addItem="addItem"
+        :updateItem="updateItem"
+        :deleteItem="deleteItem"
+        :selectedItemFromList="selectedItemFromList"
+    />
 </template>
 
 <script>
-import { mapStores, mapState, mapWritableState } from 'pinia';
+import { mapStores, mapState } from 'pinia';
+import useUserStore from '@/stores/user';
 import useManageModalStore from '@/stores/manageModal';
 import ManageModal from './ManageModal.vue';
 import TablePagination from './TablePagination.vue';
-
-// ${SALON_LIST_URL_STRING}?page=${currentPage}&pageSize=${pageSize}&search=${encodeURIComponent(searchString.trim())}&selectedCities=${selectedCities.join(',')
 
 export default {
     name: 'ManageTable',
     data() {
         return {
-            x: 2,
             selectedOption: '',
             manageModalTitle: '',
             carList: [],
@@ -103,7 +102,8 @@ export default {
             pageSize: 5,
             showPagination: false,
             itemNumberInTable: 0,
-            searchTableInput: ''
+            searchTableInput: '',
+            selectedItemFromList: {}
         }
     },
     components: {
@@ -111,36 +111,32 @@ export default {
         TablePagination
     },
     computed: {
-        ...mapStores(useManageModalStore),
+        ...mapStores(useUserStore, useManageModalStore),
         ...mapState(useManageModalStore, ['hiddenClass']),
     },
     methods: {
-        toggleManageModal() {
+        toggleManageModal($event) {
+            const carId = Number($event.target.dataset.carId);
+
             this.manageModalStore.isOpen = !this.manageModalStore.isOpen;
             this.manageModalStore.modalType = this.selectedOption;
-            console.log(this.manageModalStore.isOpen ? 'manage modal open' : 'manage modal closed');
 
-            console.log(this.manageModalStore.modalType);
+            this.selectedItemFromList = this.carList.find((car) => car.id === carId);
             this.manageModalTitle = this.manageModalStore.modalType + ' item';
-
-          this.selectedOption = '';
+            this.selectedOption = '';
         },
         openManageModal() {
             this.manageModalStore.isOpen = !this.manageModalStore.isOpen;
             this.manageModalStore.modalType = 'add';
             this.manageModalTitle = this.manageModalStore.modalType + ' item';
-
-            console.log(this.manageModalTitle)
         },
         handlePageChange(pageNumber) {
             this.currentPage = pageNumber;
             this.fetchItems();
         },
         async fetchItems() {
-            console.log(this.carList.length);
-
             try {
-                const response = await fetch(`https://localhost:7090/api/cars/user/${2}?page=${this.currentPage}&pageSize=${this.pageSize}&search=${this.searchTableInput}`, {
+                const response = await fetch(`https://localhost:7090/api/cars/user/${this.userStore.userId}?page=${this.currentPage}&pageSize=${this.pageSize}&search=${this.searchTableInput}`, {
                     method: 'GET',
                     credentials: 'include',
                 });
@@ -157,20 +153,27 @@ export default {
 
                     this.carList = json.value.carList;
                     this.totalCarsCount = totalCarsNr;
-
                     this.itemNumberInTable = this.currentPage * this.pageSize - this.pageSize;
                 }
             } catch(error) {
                 console.log(error);
                 this.carList = [];
             }
-
             console.log(this.carList);
         },
+        async addItem() {
+            this.fetchItems();
+        },
+        async updateItem() {
+            this.fetchItems();
+
+        },
+        async deleteItem() {
+            this.fetchItems();
+        }
     },
     created() {
         this.fetchItems();
-        console.log(this.searchTableInput)
     }
 }
 </script>

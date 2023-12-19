@@ -60,12 +60,14 @@ export default {
         ...mapActions(useUserStore, ['logout']),
         toggleAuthModal() {
             this.authModalStore.isOpen = !this.authModalStore.isOpen;
-            console.log(this.authModalStore.isOpen ? 'modal open' : 'modal closed');
-            // this.isOpen = !this.isOpen;
-            // console.log(this.isOpen ? 'modal open' : 'modal closed');
+            // console.log(this.authModalStore.isOpen ? 'modal open' : 'modal closed');
         },
         async signOut() {
             await this.logout();
+
+            if (this.$route.meta.requiresAuth) {
+                this.$router.push({ name: 'home' }); //
+            }
         }
     }
 }

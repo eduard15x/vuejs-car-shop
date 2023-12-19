@@ -1,8 +1,8 @@
 <template>
-    <div class="manage-item-alert-message" v-if="addShowAlert" :class="addAlertVariant">
-        {{ addAlertMessage }}
+    <div class="manage-item-alert-message" v-if="updateShowAlert" :class="updateAlertVariant">
+        {{ updateAlertMessage }}
     </div>
-    <vee-form class="update-form" @submit="updateItem" :validation-schema="carItemSchema">
+    <vee-form class="update-form" @submit="updateItem" :validation-schema="carItemSchema" :initial-values="selectedItemFromList">
         <div class="update-form__field">
             <label>Car Name</label>
             <vee-field
@@ -43,6 +43,16 @@
             />
             <ErrorMessage class="error" name="carPrice" />
         </div>
+        <div class="update-form__field">
+            <label>Car Engine</label>
+            <vee-field
+                type="text"
+                class="update-form__field--input"
+                placeholder="Engine"
+                name="engine"
+            />
+            <ErrorMessage class="error" name="engine" />
+        </div>
 
         <button
             :disabled="updateInSubmission"
@@ -55,8 +65,26 @@
 </template>
 
 <script>
+import { mapStores } from 'pinia';
+import useUserStore from '@/stores/user';
+import useManageModalStore from '@/stores/manageModal';
+
 export default {
     name: 'UpdateItem',
+    props: {
+        fetchItems: {
+            type: Function,
+            required: true
+        },
+        action: {
+            type: Function,
+            required: true
+        },
+        selectedItemFromList: {
+            type: Object,
+            required: true
+        }
+    },
     data() {
         return {
             carItemSchema: {
@@ -64,17 +92,59 @@ export default {
                 carModel: "required|min:3|max:100",
                 carYear: "required|min_value:2015|max_value:2024",
                 carPrice: "required|min_value:5000|max_value:5000000",
+                engine: "required|min:3|max:100"
             },
             updateInSubmission: false,
             updateShowAlert: false,
-            updateAlertVariant: 'bg-blue-500',
+            updateAlertVariant: 'loading-variant',
             updateAlertMessage: 'Please wait. Processing...',
         }
     },
+    computed: {
+        ...mapStores(useUserStore, useManageModalStore),
+    },
     methods: {
-        updateItem(values) {
-            console.log('update item');
+        async updateItem(values) {
+            this.updateInSubmission = true;
+            this.updateShowAlert = true;
+            this.updateAlertVariant = 'loading-variant';
+            this.updateAlertMessage = 'Please wait. Processing...';
+
+            values.userId = this.userStore.userId ? this.userStore.userId : 0;
             console.log(values);
+
+            try {
+                const response = await fetch(`https://localhost:7090/api/cars/update/${this.selectedItemFromList.id}`, {
+                    method: 'PUT',
+                    headers: {"Content-Type": "application/json"},
+                    credentials: 'include',
+                    body: JSON.stringify(values)
+                });
+                const json = await response.json();
+                console.log(json);
+
+                if (json.statusCode !== 200) {
+                    this.updateInSubmission = false;
+                    this.updateAlertVariant = 'error-variant';
+                    this.updateAlertMessage = json.value;
+                    return;
+                }
+
+            } catch (error) {
+                console.error(error);
+                this.updateInSubmission = false;
+                this.updateAlertVariant = 'error-variant';
+                this.updateAlertMessage = error;
+                return;
+            }
+
+            this.updateAlertVariant = 'success-variant';
+            this.updateAlertMessage = 'Product added successfully.';
+            await this.action();
+
+            setTimeout(() => {
+                this.manageModalStore.isOpen = !this.manageModalStore.isOpen;
+            }, 2000)
         }
     }
 }

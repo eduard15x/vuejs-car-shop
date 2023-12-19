@@ -101,6 +101,13 @@
                 &:hover {
                     filter: brightness(1.2);
                 }
+
+                &:disabled {
+                    background-color: rgba(0, 110, 255, 0.5);
+                    &:hover {
+                        filter: none;
+                    }
+                }
             }
         }
 
@@ -123,6 +130,13 @@
 
                 &:hover {
                     filter: brightness(1.2);
+                }
+
+                &:disabled {
+                    background-color: rgba(240, 128, 128, 0.5);
+                    &:hover {
+                        filter: none;
+                    }
                 }
             }
         }

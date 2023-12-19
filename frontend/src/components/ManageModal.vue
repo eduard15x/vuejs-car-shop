@@ -9,9 +9,9 @@
                 <i class="fas fa-times"></i>
             </div>
 
-            <add-item v-if="modalType === 'add'" />
-            <update-item v-else-if="modalType === 'update'" />
-            <delete-item v-else />
+            <add-item v-if="modalType === 'add'" :fetchItems="fetchItems" :action="addItem" />
+            <update-item v-else-if="modalType === 'update'" :fetchItems="fetchItems" :action="updateItem" :selectedItemFromList="selectedItemFromList" />
+            <delete-item v-else :fetchItems="fetchItems" :action="deleteItem" :selectedItemFromList="selectedItemFromList" />
         </div>
     </div>
 </template>
@@ -23,12 +23,31 @@ import AddItem from './AddItem.vue';
 import UpdateItem from './UpdateItem.vue';
 import DeleteItem from './DeleteItem.vue';
 
-
 export default {
     name: 'ManageModal',
     props: {
         manageModalTitle: {
             type: String,
+            required: true
+        },
+        fetchItems: {
+            type: Function,
+            required: true
+        },
+        addItem: {
+            type: Function,
+            required: true
+        },
+        updateItem: {
+            type: Function,
+            required: true
+        },
+        deleteItem: {
+            type: Function,
+            required: true
+        },
+        selectedItemFromList: {
+            type: Object,
             required: true
         }
     },

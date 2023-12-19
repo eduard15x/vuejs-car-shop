@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using server.Data;
+using server.Dtos.Car;
 
 namespace server.Repositories.Car
 {
@@ -17,7 +18,7 @@ namespace server.Repositories.Car
             return await _appDbContext.Cars.ToListAsync();
         }
 
-        public async Task<List<Models.Car>> GetAllCarsForUser(int userId, int page, int pageSize, string search)
+        public async Task<GetFilteredSalonListDto> GetAllCarsForUser(int userId, int page, int pageSize, string search)
         {
             var query = _appDbContext.Cars
                 .Where(s => s.UserId == userId);
@@ -27,12 +28,18 @@ namespace server.Repositories.Car
                 query = query.Where(s => s.CarName.Contains(search));
             }
 
+            var totalItemsCount = await query.CountAsync();
+
             var carListDb = await query
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
 
-            return carListDb;
+            return new GetFilteredSalonListDto
+            {
+                CarList = carListDb,
+                TotalCars = totalItemsCount
+            };
         }
 
         public async Task<Models.Car> GetSingleCar(int carId)

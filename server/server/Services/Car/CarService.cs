@@ -55,7 +55,7 @@ namespace server.Services.Car
             return _mapper.Map<List<GetSingleCarDto>>(bookList);
         }
 
-        public async Task<List<GetSingleCarDto>> GetAllCarsForUser(int userId, int page, int pageSize, string search)
+        public async Task<GetFilteredSalonListDto> GetAllCarsForUser(int userId, int page, int pageSize, string search)
         {
             var currentUser = GetUserId();
 
@@ -66,12 +66,10 @@ namespace server.Services.Car
 
             if (page < 0 || pageSize <= 0)
             {
-                return new List<GetSingleCarDto>();
+                return new GetFilteredSalonListDto();
             }
 
-            var bookList = await _carRepository.GetAllCarsForUser(userId, page, pageSize, search);
-
-            return _mapper.Map<List<GetSingleCarDto>>(bookList);
+            return await _carRepository.GetAllCarsForUser(userId, page, pageSize, search);
         }
 
         public async Task<GetSingleCarDto> GetSingleCar(int carId)

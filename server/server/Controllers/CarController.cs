@@ -16,7 +16,6 @@ namespace server.Controllers
             _carService = carService;
         }
 
-
         [HttpGet]
         [ProducesResponseType(typeof(JsonResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(JsonResult), (int)HttpStatusCode.BadRequest)]
@@ -29,7 +28,7 @@ namespace server.Controllers
             }
             catch (Exception ex)
             {
-                return Json(BadRequest(ex));
+                return Json(BadRequest(ex.Message));
             }
         }
 
@@ -40,15 +39,14 @@ namespace server.Controllers
         {
             try
             {
-                var response = await _carService.GetAllCarsForUser(userId, page, pageSize, search);
-                return Json(Ok(response));
+                var carList = await _carService.GetAllCarsForUser(userId, page, pageSize, search);
+                return Json(Ok(carList));
             }
             catch (Exception ex)
             {
                 return Json(Conflict(ex.Message));
             }
         }
-
 
         [HttpGet("{carId}")]
         [ProducesResponseType(typeof(JsonResult), (int)HttpStatusCode.OK)]
@@ -62,10 +60,9 @@ namespace server.Controllers
             }
             catch (Exception ex)
             {
-                return Json(BadRequest(ex));
+                return Json(BadRequest(ex.Message));
             }
         }
-
 
         [HttpPost("add")]
         [ProducesResponseType(typeof(JsonResult), (int)HttpStatusCode.OK)]
@@ -83,7 +80,6 @@ namespace server.Controllers
             }
         }
 
-
         [HttpPut("update/{carId}")]
         [ProducesResponseType(typeof(JsonResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(JsonResult), (int)HttpStatusCode.NotModified)]
@@ -99,7 +95,6 @@ namespace server.Controllers
                 return Json(Conflict(ex.Message));
             }
         }
-
 
         [HttpDelete("delete/{carId}")]
         [ProducesResponseType(typeof(JsonResult), (int)HttpStatusCode.OK)]

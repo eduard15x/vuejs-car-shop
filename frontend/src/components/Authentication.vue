@@ -1,10 +1,13 @@
 <template>
-    <div class="authentication" :class="!hiddenClass">
+    <div class="authentication" id="modal" :class="hiddenClass">
         <div class="modal">
 
             <div class="modal__content">
                 <h2 class="modal__content--title">Your Account</h2>
-                <p class="modal__content--close-btn" @click.prevent="modalVisibility = false">X</p>
+
+                <div class="modal__content--close-btn" @click.prevent="modalVisibility = false">
+                    <i class="fas fa-times"></i>
+                </div>
 
                 <ul class="modal__content--tabs">
                     <li
@@ -34,7 +37,7 @@
 
 <script>
 import { mapStores, mapState, mapWritableState } from 'pinia';
-import useModalStore from '@/stores/modal';
+import useAuthModalStore from '@/stores/authModal';
 import LoginForm from './LoginForm.vue';
 import RegisterForm from './RegisterForm.vue';
 
@@ -50,9 +53,9 @@ export default {
         RegisterForm
     },
     computed: {
-        ...mapStores(useModalStore),
-        ...mapState(useModalStore, ['hiddenClass']),
-        ...mapWritableState(useModalStore, {
+        ...mapStores(useAuthModalStore),
+        ...mapState(useAuthModalStore, ['hiddenClass']),
+        ...mapWritableState(useAuthModalStore, {
             modalVisibility: 'isOpen'
         }),
     },

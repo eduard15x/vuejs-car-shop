@@ -9,6 +9,7 @@
         justify-content: flex-start;
         align-items: center;
         padding: 20px 16px;
+        color: white;
 
         &--home-link {
             color: white;
@@ -22,6 +23,11 @@
             display: flex;
             flex-grow: 1;
             align-items: center;
+            justify-content: space-between;
+
+            // .account-email {
+            //     cursor: pointer;
+            // }
         }
     }
 

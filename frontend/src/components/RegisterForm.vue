@@ -37,9 +37,21 @@
             <vee-field
                 type="number"
                 class="register-form__field--input"
+                placeholder="Enter You Age (+18)"
                 name="age"
             />
             <ErrorMessage class="error" name="age" />
+        </div>
+        <!-- Phone number -->
+        <div class="register-form__field">
+            <label class="inline-block mb-2">Phone number</label>
+            <vee-field
+                type="string"
+                class="register-form__field--input"
+                placeholder="Enter Your Number"
+                name="phoneNumber"
+            />
+            <ErrorMessage class="error" name="phoneNumber" />
         </div>
         <!-- Password -->
         <div class="register-form__field">
@@ -103,17 +115,53 @@ export default {
                 age: "required|min_value:18|max_value:100",
                 password: "required|min:9|max:100|excluded:password",
                 confirmPassword: "confirmed:@password",
+                phoneNumber: "required|min:10|max:10",
                 tos: "required",
             },
             registrationInSubmission: false,
             registrationShowAlert: false,
-            registrationAlertVariant: 'bg-blue-500',
+            registrationAlertVariant: 'loading-variant',
             registrationAlertMessage: 'Please wait. Processing...',
         }
     },
     methods: {
-        register(values) {
+        async register(values) {
+            this.registrationInSubmission = true;
+            this.registrationShowAlert = true;
+            this.registrationAlertVariant = 'loading-variant';
+            this.registrationAlertMessage = 'Please wait. Processing...';
+
+
             console.log(values);
+            let data;
+
+            try {
+                const response = await fetch('https://localhost:7090/api/user/register', {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify(values)
+                });
+
+                const json = await response.json();
+                console.log(json);
+
+                if (json.statusCode === 201 && json.value.isLoggedIn) {
+                    data = json.value;
+                } else {
+                    this.registrationInSubmission = false;
+                    this.registrationAlertVariant = 'error-variant';
+                    this.registrationAlertMessage = json.value;
+                    return;
+                }
+            } catch(err) {
+                this.registrationInSubmission = false;
+                this.registrationAlertVariant = 'error-variant';
+                this.registrationAlertMessage = err;
+                return;
+            }
+
+            this.registrationAlertVariant = 'success-variant';
+            this.registrationAlertMessage = 'Account created. You will be logged in.';
         }
     }
 }

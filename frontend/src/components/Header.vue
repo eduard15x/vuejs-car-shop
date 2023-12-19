@@ -19,7 +19,7 @@
                             About
                         </router-link>
                     </li>
-                    <li v-if=" 1 === 1">
+                    <li v-if="!userStore.isLoggedIn">
                         <router-link
                             class="primary-link"
                             :to="{ name: 'home'}"
@@ -37,32 +37,35 @@
                         </li>
                     </template>
                 </ul>
-
-
+                <li class="account-email" v-fi="userStore.isLoggedIn">
+                    {{ userStore.email }}
+                </li>
             </div>
         </nav>
     </header>
 </template>
 
 <script>
-import { mapStores } from 'pinia';
+import { mapStores, mapActions } from 'pinia';
 import useAuthModalStore from '@/stores/authModal';
+import useUserStore from '@/stores/user';
 
 export default {
     name: 'AppHeader',
     computed: {
-        ...mapStores(useAuthModalStore),
+        ...mapStores(useAuthModalStore, useUserStore),
         // ...mapWritableState(useModalStore, ['isOpen']),
     },
     methods: {
+        ...mapActions(useUserStore, ['logout']),
         toggleAuthModal() {
             this.authModalStore.isOpen = !this.authModalStore.isOpen;
             console.log(this.authModalStore.isOpen ? 'modal open' : 'modal closed');
             // this.isOpen = !this.isOpen;
             // console.log(this.isOpen ? 'modal open' : 'modal closed');
         },
-        signOut() {
-            console.log('signOut')
+        async signOut() {
+            await this.logout();
         }
     }
 }

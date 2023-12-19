@@ -35,6 +35,10 @@
 </template>
 
 <script>
+import { mapStores } from 'pinia';
+import useUserStore from '@/stores/user';
+import cookies from 'js-cookie'
+
 export default {
     name: 'LoginForm',
     data() {
@@ -45,13 +49,62 @@ export default {
             },
             loginInSubmission: false,
             loginShowAlert: false,
-            loginAlertVariant: 'bg-blue-500',
+            loginAlertVariant: 'loading-variant',
             loginAlertMessage: 'Please wait. Processing...',
         }
     },
+    computed: {
+        ...mapStores(useUserStore),
+    },
     methods: {
-        login(values) {
-            console.log(values);
+        async login(values) {
+            this.loginInSubmission = true;
+            this.loginShowAlert = true;
+            this.loginAlertVariant = 'loading-variant';
+            this.loginAlertMessage = 'Please wait. Processing...';
+
+            try {
+                const response = await fetch('https://localhost:7090/api/user/login', {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    credentials: 'include',
+                    body: JSON.stringify(values)
+                });
+
+                const json = await response.json();
+                console.log(json);
+
+                if (json.statusCode === 200) {
+                    const { email, userId, isLoggedIn } = json.value;
+
+                    this.userStore.email = email;
+                    this.userStore.userId = userId;
+                    this.userStore.isLoggedIn = isLoggedIn;
+
+                    const expireTime30Minutes = new Date(new Date().getTime() + 30 * 60 * 1000);
+                    const cookieString = userId + "-" + email;
+
+                    cookies.set("user", cookieString, {expires: expireTime30Minutes, path: "/", secure: true});
+
+                } else {
+                    this.loginInSubmission = false;
+                    this.loginAlertVariant = 'error-variant';
+                    this.loginAlertMessage = json.value;
+                    return;
+                }
+            } catch(err) {
+                this.loginInSubmission = false;
+                this.loginAlertVariant = 'error-variant';
+                this.loginAlertMessage = err;
+                return;
+            }
+
+            this.loginAlertVariant = 'success-variant';
+            this.loginAlertMessage = 'Success. You are logged in';
+
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
         }
     }
 }

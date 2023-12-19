@@ -10,6 +10,8 @@
 
 
 <script>
+import { mapActions } from 'pinia';
+import useUserStore from '@/stores/user';
 import AppHeader from '@/components/Header.vue';
 import AppFooter from '@/components/Footer.vue';
 import AppAuthentication from '@/components/Authentication.vue';
@@ -21,6 +23,12 @@ export default {
     AppHeader,
     AppFooter,
     AppAuthentication
+  },
+  methods: {
+      ...mapActions(useUserStore, ['checkUser']),
+  },
+  created() {
+    this.checkUser();
   }
 }
 </script>

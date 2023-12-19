@@ -37,7 +37,7 @@
                         </li>
                     </template>
                 </ul>
-                <li class="account-email" v-fi="userStore.isLoggedIn">
+                <li class="account-email" v-if="userStore.isLoggedIn">
                     {{ userStore.email }}
                 </li>
             </div>

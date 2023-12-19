@@ -26,7 +26,6 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
-  linkExactActiveClass: 'link-current-active'
 });
 
 export default router;

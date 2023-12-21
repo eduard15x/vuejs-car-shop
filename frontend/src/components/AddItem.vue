@@ -2,7 +2,7 @@
     <div class="manage-item-alert-message" v-if="addShowAlert" :class="addAlertVariant">
         {{ addAlertMessage }}
     </div>
-    <vee-form class="add-form" @submit="addItem" :validation-schema="carItemSchema">
+    <vee-form class="add-form" @submit="addItem" :validation-schema="carItemSchema" :initial-values="defaultUserValues">
         <div class="add-form__field">
             <label>Car Name</label>
             <vee-field
@@ -94,6 +94,7 @@ export default {
             addShowAlert: false,
             addAlertVariant: 'loading-variant',
             addAlertMessage: 'Please wait. Processing...',
+            defaultUserValues: {}
         }
     },
     computed: {
@@ -135,6 +136,8 @@ export default {
             await this.action();
 
             setTimeout(() => {
+                this.addInSubmission = false;
+                this.addShowAlert = false;
                 this.manageModalStore.isOpen = !this.manageModalStore.isOpen;
             }, 2000)
         }

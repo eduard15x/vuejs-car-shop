@@ -1,5 +1,7 @@
 <template>
-
+    <div>
+        buy
+    </div>
 </template>
 
 <script>

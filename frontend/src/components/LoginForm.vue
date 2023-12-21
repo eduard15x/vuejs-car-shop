@@ -72,8 +72,6 @@ export default {
                 });
 
                 const json = await response.json();
-                console.log(json);
-
                 if (json.statusCode === 200) {
                     const { email, userId, isLoggedIn } = json.value;
 

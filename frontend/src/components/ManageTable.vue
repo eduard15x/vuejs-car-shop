@@ -6,63 +6,65 @@
 
         <div class="table-functions">
             <div class="search-container">
-                <input class="search-container__input" type="text" placeholder="Find Product" :value="searchTableInput" @change="e => searchTableInput = e.target.value">
-                <button class="search-container__btn" @click.prevent="fetchItems">Find</button>
+                <input class="search-container__input" type="text" placeholder="Find Car" :value="searchTableInput" @change="e => searchTableInput = e.target.value">
+                <button class="search-container__btn" @click.prevent="fetchItems">Search</button>
             </div>
             <button
                 class="add-new-btn"
                 @click.prevent="openManageModal"
             >
-                Add New Car
+                Add Car
             </button>
         </div>
 
-        <table class="manage-table__table" border aria-label="manage cars table">
+        <div class="table-wrapper">
+            <table class="manage-table__table" border aria-label="manage cars table">
+                <thead class="manage-table__table--head">
+                    <tr>
+                        <th v-if="carList.length !== 0" scope="col" class="">Nr</th>
+                        <th scope="col" class="">Id</th>
+                        <th scope="col" class="">Car Name</th>
+                        <th scope="col" class="">Model</th>
+                        <th scope="col" class="">Engine</th>
+                        <th scope="col" class="">Year</th>
+                        <th scope="col" class="">Car Price</th>
+                        <th scope="col" class="">Actiuni</th>
+                    </tr>
+                </thead>
 
-            <thead class="manage-table__table--head">
-                <tr>
-                    <th v-if="carList.length !== 0" scope="col" class="">Nr</th>
-                    <th scope="col" class="">Id</th>
-                    <th scope="col" class="">Car Name</th>
-                    <th scope="col" class="">Model</th>
-                    <th scope="col" class="">Engine</th>
-                    <th scope="col" class="">Year</th>
-                    <th scope="col" class="">Car Price</th>
-                    <th scope="col" class="">Actiuni</th>
-                </tr>
-            </thead>
+                <tbody v-if="carList.length !== 0" class="manage-table__table--body">
+                    <tr v-for="(car, index) in carList" :key="index">
+                        <td>{{ index + 1 + itemNumberInTable }}</td>
+                        <td>{{ car.id }}</td>
+                        <td>{{ car.carName }}</td>
+                        <td>{{ car.carModel }}</td>
+                        <td>{{ car.engine }}</td>
+                        <td>{{ car.carYear }}</td>
+                        <td>${{ car.carPrice }}</td>
+                        <td>
+                            <select class="manage-item" :data-car-id="car.id" v-model="selectedOption" @change="toggleManageModal">
+                                <option value="" disabled>Select option</option>
+                                <option value="update">Update</option>
+                                <option value="delete">Delete</option>
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>
 
-            <tbody v-if="carList.length !== 0" class="manage-table__table--body">
-                <tr v-for="(car, index) in carList" :key="index">
-                    <td>{{ index + 1 + itemNumberInTable }}</td>
-                    <td>{{ car.id }}</td>
-                    <td>{{ car.carName }}</td>
-                    <td>{{ car.carModel }}</td>
-                    <td>{{ car.engine }}</td>
-                    <td>{{ car.carYear }}</td>
-                    <td>${{ car.carPrice }}</td>
-                    <td>
-                        <select class="manage-item" :data-car-id="car.id" v-model="selectedOption" @change="toggleManageModal">
-                            <option value="" disabled>Select option</option>
-                            <option value="update">Update</option>
-                            <option value="delete">Delete</option>
-                        </select>
-                    </td>
-                </tr>
-            </tbody>
-
-            <tbody v-else class="empty-table">
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td class="text">No items available</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
+                <tbody v-else class="empty-table">
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="text">No items available</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
 
         <table-pagination
             v-if="showPagination"
@@ -156,7 +158,6 @@ export default {
                     this.itemNumberInTable = this.currentPage * this.pageSize - this.pageSize;
                 }
             } catch(error) {
-                console.log(error);
                 this.carList = [];
             }
             console.log(this.carList);

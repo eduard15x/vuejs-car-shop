@@ -10,15 +10,20 @@
     justify-content: center;
     width: 100%;
 
+
     &__content {
         position: absolute;
-        width: 500px;
+        width: 90%;
         border: 1px solid rgb(70, 70, 70);
         padding: 18px;
         display: flex;
         flex-direction: column;
         background-color: white;
         border-radius: 10px;
+
+        @include breakpoint(mobile) {
+            width: 500px;
+        }
 
         &--title {
             font-size: 20px;
@@ -59,13 +64,17 @@
                     display: block;
                     margin-bottom: 8px;
                     color: rgb(71, 71, 71);
-                    font-size: 18px;
+                    font-size: 16px;
+
+                    @include breakpoint(mobile) {
+                        font-size: 18px;
+                    }
                 }
 
                 &--input {
                     display: block;
                     width: 100%;
-                    padding: 12px;
+                    padding: 8px;
                     color: rgb(110, 110, 110);
                     border: 1px solid rgb(205, 205, 205);
                     transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
@@ -73,6 +82,10 @@
                     transition-duration: 150ms;
                     transition-duration: 500ms;
                     border-radius: 4px;
+
+                    @include breakpoint(mobile) {
+                        padding: 12px;
+                    }
 
                     &:focus {
                         outline: 2px solid transparent;
@@ -113,20 +126,31 @@
 
         .delete-form {
             .alert-message {
-                font-size: 18px;
+                font-size: 16px;
                 padding: 20px 0px;
                 color: lightcoral;
                 line-height: 150%;
+
+                @include breakpoint(mobile) {
+                    font-size: 18px;
+                    line-height: 125%;
+                }
             }
 
             .delete-btn {
-                font-size: 16px;
+                font-size: 14px;
                 border: none;
                 border-radius: 5px;
-                padding: 10px 24px;
+                padding: 8px 18px;
                 background-color: lightcoral;
                 color: white;
                 cursor: pointer;
+
+                @include breakpoint(mobile) {
+                    font-size: 16px;
+                    border-radius: 5px;
+                    padding: 10px 24px;
+                }
 
                 &:hover {
                     filter: brightness(1.2);

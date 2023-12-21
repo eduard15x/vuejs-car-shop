@@ -59,6 +59,7 @@ export default {
             await this.action();
 
             setTimeout(() => {
+                this.deleteInSubmission = true;
                 this.manageModalStore.isOpen = !this.manageModalStore.isOpen;
             }, 1000)
         }

@@ -42,6 +42,23 @@
                 </li>
             </div>
         </nav>
+
+        <div className="header__hamburger-menu">
+          <input id="menu__toggle" type="checkbox" />
+          <label className="menu__btn" htmlFor="menu__toggle">
+            <span></span>
+          </label>
+
+          <ul class="menu__box">
+            <li><router-link class="menu__item" :to="{ name: 'home'}">Home</router-link></li>
+            <li><router-link class="menu__item" :to="{ name: 'home'}"> About </router-link></li>
+            <li v-if="!userStore.isLoggedIn"><router-link class="menu__item" :to="{ name: 'home'}" @click.prevent="toggleAuthModal">Login / Register</router-link></li>
+            <template v-else>
+                <li><router-link class="menu__item" :to="{ name: 'manage' }">Manage</router-link></li>
+                <li><a class="menu__item" href="#" @click.prevent="signOut">Logout</a></li>
+            </template>
+          </ul>
+        </div>
     </header>
 </template>
 

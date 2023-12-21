@@ -131,8 +131,6 @@ export default {
             this.registrationAlertVariant = 'loading-variant';
             this.registrationAlertMessage = 'Please wait. Processing...';
 
-
-            console.log(values);
             let data;
 
             try {
@@ -143,10 +141,9 @@ export default {
                 });
 
                 const json = await response.json();
-                console.log(json);
-
                 if (json.statusCode === 201 && json.value.isLoggedIn) {
                     data = json.value;
+                    console.log(data);
                 } else {
                     this.registrationInSubmission = false;
                     this.registrationAlertVariant = 'error-variant';
@@ -162,6 +159,10 @@ export default {
 
             this.registrationAlertVariant = 'success-variant';
             this.registrationAlertMessage = 'Account created. You will be logged in.';
+
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000)
         }
     }
 }

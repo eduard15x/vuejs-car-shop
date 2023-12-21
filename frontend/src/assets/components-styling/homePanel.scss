@@ -1,0 +1,75 @@
+.home-panel {
+    display: flex;
+    flex-direction: column;
+    padding: 0px 12px;
+    padding-bottom: 100px;
+
+    @include breakpoint(mobile) {
+        background-color: #ebebeb;
+        max-width: 1080px;
+        flex-direction: row;
+        margin: 30px auto;
+        padding: 0px 30px;
+        padding-bottom: 20px;
+        border-radius: 5px;
+    }
+
+    @include breakpoint(desktop) {
+        max-width: 1280px;
+    }
+
+    @include breakpoint(desktopLarge) {
+        max-width: 1440px;
+    }
+
+    &__container {
+        text-align: center;
+        margin: 20px 0px;
+        padding: 8px 12px;
+        background-color: #ebebeb;
+        border-radius: 5px;
+
+        @include breakpoint(mobile) {
+            width: 33.3%;
+            margin: 0;
+            padding: 8px 12px;
+            background-color: transparent;
+            border-radius: 0;
+        }
+
+        .service-number {
+            margin: 0 auto;
+            margin-top: -24px;
+            width: 30px;
+            height: 30px;
+            background-color: rgb(12, 117, 238);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+
+            @include breakpoint(mobile) {
+                margin-top: -20px;
+                width: 35px;
+                height: 35px;
+            }
+        }
+
+        .service-title {
+            margin: 10px 0px;
+            font-size: 18px;
+            color: rgb(40, 40, 40);
+
+            @include breakpoint(mobile) {
+                font-size: 24px;
+            }
+        }
+
+        .service-description {
+            color: rgb(60, 60, 60);
+        }
+    }
+}

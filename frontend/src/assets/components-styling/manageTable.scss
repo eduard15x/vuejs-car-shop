@@ -1,34 +1,68 @@
 .manage-table {
     width: 100%;
     padding: 20px;
-    padding-bottom: 100px;
     max-width: 1440px;
     margin: 0 auto;
 
+    @include breakpoint(mobileCustom) {
+        padding-bottom: 50px;
+    }
+
     .table-functions {
         display: flex;
+        flex-direction: column;
         justify-content: space-between;
-        align-items: center;
         padding: 10px 0;
 
+        @include breakpoint(mobileCustom) {
+            flex-direction: row;
+            align-items: center;
+        }
+
         .search-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+
+
+            @include breakpoint(mobileCustom) {
+                flex-direction: row;
+                align-items: center;
+            }
+
             &__input {
-                font-size: 16px;
-                width: 250px;
-                margin-right: 10px;
+                width: 90%;
+                font-size: 14px;
+                margin-right: 6px;
                 padding: 6px;
                 border: 1px solid rgb(175, 175, 175);
                 border-radius: 4px;
+                margin-bottom: 12px;
+
+                @include breakpoint(mobileCustom) {
+                    width: 230px;
+                    font-size: 16px;
+                    margin-bottom: 0;
+                }
+
+                @include breakpoint(mobile) {
+                    width: 260px;
+                }
             }
 
             &__btn {
-                font-size: 16px;
-                padding: 6px 24px;
+                font-size: 14px;
+                padding: 6px 12px;
                 border: none;
                 border-radius: 4px;
                 background-color: rgb(0, 110, 255);
                 color: white;
                 cursor: pointer;
+
+                @include breakpoint(mobileCustom) {
+                    font-size: 16px;
+                    padding: 6px 24px;
+                }
 
                 &:hover {
                     filter: brightness(1.2);
@@ -53,7 +87,17 @@
 
     &__title {
         text-align: center;
-        margin-bottom: 30px;
+        font-size: 20px;
+        margin-bottom: 12px;
+
+        @include breakpoint(mobileCustom) {
+            font-size: 30px;
+            margin-bottom: 30px;
+        }
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
     }
 
     &__table {
@@ -63,13 +107,19 @@
         border-collapse: collapse;
         color: rgb(70, 70, 70);
 
+
         &--head {
             background-color: rgb(237, 237, 237);
 
             tr {
                 th {
-                    font-size: 18px;
-                    padding: 10px;
+                    font-size: 14px;
+                    padding: 6px;
+
+                    @include breakpoint(mobileCustom) {
+                        font-size: 18px;
+                        padding: 10px;
+                    }
 
                     &:nth-child(2) {
                         text-align: center;
@@ -82,9 +132,15 @@
         &--body {
             tr {
                 td {
-                    padding: 12px 8px;
-                    line-height: 150%;
-                    font-size: 18px;
+                    padding: 8px;
+                    line-height: 125%;
+                    font-size: 14px;
+
+                    @include breakpoint(mobileCustom) {
+                        padding: 12px 8px;
+                        line-height: 150%;
+                        font-size: 18px;
+                    }
 
                     &:first-child {
                         text-align: center;
@@ -108,9 +164,14 @@
 
                 .manage-item {
                     cursor: pointer;
-                    font-size: 16px;
-                    padding: 8px;
+                    font-size: 12px;
+                    padding: 4px;
                     border: 1px solid rgb(160, 160, 160);
+
+                    @include breakpoint(mobileCustom) {
+                        font-size: 16px;
+                        padding: 8px;
+                    }
 
                 }
             }
@@ -136,13 +197,21 @@
     .pagination {
         display: flex;
         justify-content: center;
+        flex-direction: column;
         align-items: center;
         padding: 20px 0;
+
+        @include breakpoint(mobileCustom) {
+            flex-direction: row;
+        }
 
         &__info {
             p {
                 font-weight: bold;
                 color: rgb(70, 70, 70);
+            }
+
+            @include breakpoint(mobileCustom) {
                 margin-right: 12px;
             }
         }
@@ -152,13 +221,18 @@
 
             button {
                 border: none;
-                font-size: 16px;
-
+                font-size: 14px;
                 padding: 4px 16px;
                 border-radius: 4px;
                 background-color: rgb(220, 220, 220);
                 color: black;
                 cursor: pointer;
+                margin-top: 12px;
+
+                @include breakpoint(mobileCustom) {
+                    font-size: 16px;
+                    margin-top: 0;
+                }
 
                 &:hover {
                     filter: brightness(0.9);

@@ -1,11 +1,15 @@
-.register-alert-message {
+.login-alert-message {
     font-weight: bold;
     border-radius: 4px;
     margin-bottom: 12px;
 }
 
-.register-form {
-    font-size: 16px;
+.login-form {
+    font-size: 14px;
+
+    @include breakpoint(mobile) {
+        font-size: 16px;
+    }
 
     &__field {
         margin-bottom: 12px;
@@ -14,13 +18,17 @@
             display: block;
             margin-bottom: 8px;
             color: rgb(71, 71, 71);
-            font-size: 18px;
+            font-size: 16px;
+
+            @include breakpoint(mobile) {
+                font-size: 18px;
+            }
         }
 
         &--input {
             display: block;
             width: 100%;
-            padding: 12px;
+            padding: 8px;
             color: rgb(110, 110, 110);
             border: 1px solid rgb(205, 205, 205);
             transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
@@ -29,6 +37,9 @@
             transition-duration: 500ms;
             border-radius: 4px;
 
+            @include breakpoint(mobile) {
+                padding: 12px;
+            }
 
             &:focus {
                 outline: 2px solid transparent;
@@ -66,25 +77,5 @@
                 background-color: rgba(137, 43, 226, 0.4);
             }
         }
-    }
-
-    &__tos {
-        padding: 10px 0px;
-        display: flex;
-        align-items: center;
-
-        input {
-            font-size: 20px;
-            padding: 10px;
-            width: 20px;
-            height: 20px;
-            margin-right: 10px;
-        }
-    }
-
-    .error-tos {
-        display: block;
-        padding: 6px 0px;
-        color: red;
     }
 }

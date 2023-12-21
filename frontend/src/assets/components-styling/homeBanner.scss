@@ -1,0 +1,144 @@
+.home-banner {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 30px;
+
+    @include breakpoint(mobile) {
+        max-width: 600px;
+        position: relative;
+        margin: auto;
+        display: flex;
+        align-items: center;
+        margin-top: 20px;
+        margin-bottom: 50px;
+    }
+
+    @include breakpoint(tabletSmall) {
+    }
+
+    @include breakpoint(customBreakpointCarousel) {
+        max-width: 768px;
+    }
+
+    @include breakpoint(tablet) {
+        max-width: 768px;
+    }
+    
+    @include breakpoint(middleViewport) {
+        max-width: 975px;
+    }
+
+    &__container {
+        background: #f5f5f5;
+        color: rgb(32, 32, 32);
+        height: 260px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 0px 12px;
+        padding: 0px 20px;
+        border-radius: 5px;
+
+        @include breakpoint(mobileCustom) {
+            padding: 0px 40px;
+            border-radius: 0px;
+        }
+
+        @include breakpoint(mobile) {
+            position: absolute;
+            z-index: 2;
+            width: 190px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 0px 5px;
+            border-radius: 5px;
+            left: 12px;
+        }
+
+        @include breakpoint(customBreakpointCarousel) {
+            width: 220px;
+            height: 240px;
+            left: 20px;
+        }
+
+        @include breakpoint(middleViewport) {
+            width: 260px;
+            height: 300px;
+            left: 30px;
+        }
+
+        .banner-text {
+            font-size: 26px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 130%;
+
+            @include breakpoint(mobileSmallCustom) {
+                font-size: 28px;
+                font-weight: bold;
+                text-align: center;
+                line-height: 150%;
+            }
+
+            @include breakpoint(mobile) {
+                font-size: 20px;
+            }
+
+            @include breakpoint(middleViewport) {
+                font-size: 24px;
+            }
+
+            span {
+                font-size: 16px;
+                font-weight: normal;
+
+                @include breakpoint(mobileSmallCustom) {
+                    font-size: 20px;
+                    font-weight: normal;
+                }
+
+                @include breakpoint(mobile) {
+                    font-size: 16px;
+                    font-weight: normal;
+                }
+
+                @include breakpoint(middleViewport) {
+                    font-size: 20px;
+                }
+            }
+        }
+
+        .banner-link {
+            font-size: 18px;
+            border: none;
+            background-color: rgb(68, 143, 7);
+            border-radius: 4px;
+            padding: 8px 24px;
+            color: white;
+            margin-top: 20px;
+
+            &:hover {
+                filter: brightness(1.2);
+            }
+        }
+    }
+
+    &__img {
+        display: none;
+
+        @include breakpoint(mobile) {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border-radius: 0px 0px 40px 40px;
+            border-radius: 10px;
+            filter: brightness(0.9);
+        }
+    }
+}

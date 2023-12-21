@@ -111,7 +111,6 @@ export default {
             this.updateAlertMessage = 'Please wait. Processing...';
 
             values.userId = this.userStore.userId ? this.userStore.userId : 0;
-            console.log(values);
 
             try {
                 const response = await fetch(`https://localhost:7090/api/cars/update/${this.selectedItemFromList.id}`, {
@@ -121,7 +120,6 @@ export default {
                     body: JSON.stringify(values)
                 });
                 const json = await response.json();
-                console.log(json);
 
                 if (json.statusCode !== 200) {
                     this.updateInSubmission = false;
@@ -139,10 +137,12 @@ export default {
             }
 
             this.updateAlertVariant = 'success-variant';
-            this.updateAlertMessage = 'Product added successfully.';
+            this.updateAlertMessage = 'Product updated successfully.';
             await this.action();
 
             setTimeout(() => {
+                this.updateInSubmission = false;
+                this.updateShowAlert = false;
                 this.manageModalStore.isOpen = !this.manageModalStore.isOpen;
             }, 2000)
         }
